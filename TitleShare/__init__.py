@@ -18,7 +18,9 @@ def create_app():
         # TODO: Proper migrations
         db.create_all()
         print("Database initialized.")
-        os.makedirs(Config.SHARE_PRESETS_PATH, exist_ok=True)
+        if not os.path.islink(Config.SHARE_PRESETS_PATH):
+            print("Creating", os.path.abspath(Config.SHARE_PRESETS_PATH))
+            os.makedirs(Config.SHARE_PRESETS_PATH, exist_ok=True)
 
     # Register blueprints
     from .routes.share import share_bp
