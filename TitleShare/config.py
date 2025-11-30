@@ -16,7 +16,7 @@ class Config:
     # how much storage (in MB) to use before deleting expired presets
     SHARE_EXPIRY_STORAGE_THRESHOLD = int(os.getenv("SHARE_EXPIRY_STORAGE_THRESHOLD", 512)) # in MB
     # how much storage (in MB) beofre deleting non-expired presets
-    SHARE_STORAGE_THRESHOLD = int(os.getenv("SHARE_EXPIRY_STORAGE_THRESHOLD", 1024)) # in MB
+    SHARE_STORAGE_THRESHOLD = int(os.getenv("SHARE_STORAGE_THRESHOLD", 1024)) # in MB
 
 # Passed to Flask app
 class AppConfig:
