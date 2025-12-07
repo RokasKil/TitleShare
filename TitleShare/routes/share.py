@@ -1,5 +1,5 @@
-
-from flask import Blueprint, request, jsonify, redirect
+from flask import Blueprint, request, jsonify, render_template, abort, current_app
+from werkzeug.utils import secure_filename
 import json
 from ..config import Config
 from ..models import *
@@ -8,6 +8,7 @@ from ..utils.share import generate_share_code
 from ..utils.preset_file import write_preset_file, read_preset_file, get_hash
 from ..utils.date import get_expiry_date, get_datetime
 from ..utils.validation import validate_preset
+from ..utils.cat import get_random_cat
 
 share_bp = Blueprint("share", __name__)
 
@@ -50,15 +51,14 @@ def share_preset():
 
 @share_bp.route("/<code>", methods=["GET"])
 def get_share(code):
-    print(f"{request.remote_addr} - {code} - Redirecting")
+    print(f"{request.remote_addr} - {code} - Getting")
     preset = Preset.query.filter_by(code=code).first()
-    # TODO: Pretty error pages
     if not preset:
-        return "<b>Not found</b>", 404
+        abort(404)
     if preset.deleted:
-        return "<b>Expired</b>", 410
-    print(f"[{request.remote_addr}][{preset.code}] Redirecting")
-    return redirect(f"{Config.DALAMUD_PROTOCOL}://plugin/TitleEdit/importShared?code={preset.code}")
+        return render_template("expired.html", preset=preset, cat_file_name=get_random_cat(current_app)), 410
+    print(f"[{request.remote_addr}][{preset.code}] Getting")
+    return render_template("share.html", preset=preset, dalamudUrl=f"{Config.DALAMUD_PROTOCOL}://plugin/TitleEdit/importShared?code={preset.code}")
 
 @share_bp.route("/file/<code>", methods=["GET"])
 def get_share_file(code: str):
@@ -68,10 +68,13 @@ def get_share_file(code: str):
         return jsonify({"error": "Preset not found"}), 404
     if preset.deleted:
         return jsonify({"error": "Preset has expired"}), 410
-    else:
-        preset_file_content = read_preset_file(preset.preset_file.name)
-        preset.download_count += 1
-        db.session.add(preset)
-        db.session.commit()
-        return preset_file_content, 200, {'Content-Type': 'application/json'}
+    preset_file_content = read_preset_file(preset.preset_file.name)
+    preset.download_count += 1
+    db.session.add(preset)
+    db.session.commit()
+    return preset_file_content, 200, {
+        'Content-Type': 'application/json',
+        # TODO: Maybe figure out a better way to escape the name cause this is way too aggresive
+        "Content-Disposition": f"attachment; filename={secure_filename(preset.name)}.json"
+    }
     

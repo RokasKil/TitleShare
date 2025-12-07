@@ -197,7 +197,7 @@ preset_schema = {
     "required": ["Version", "Name", "Author", "CameraFollowMode", "LocationModel"]
 }
 
-def validate_preset(preset_json: dict):
+def validate_preset(preset_json: dict) -> bool:
     
     validator = Draft202012Validator(preset_schema)
     errors = sorted(validator.iter_errors(preset_json), key=lambda e: e.path)

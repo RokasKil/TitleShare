@@ -1,4 +1,3 @@
-
 from flask import Blueprint, jsonify
 from ..models import *
 from ..database import db

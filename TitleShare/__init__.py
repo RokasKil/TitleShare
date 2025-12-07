@@ -5,7 +5,7 @@ from .models import *
 from .config import AppConfig, Config
 from .scheduler import scheduler
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(AppConfig)
 
@@ -29,6 +29,9 @@ def create_app():
         print("Debug mode enabled: registering debug routes")
         from .routes.debug import debug_bp
         app.register_blueprint(debug_bp, url_prefix="/share/debug")
+    # register error handlers
+    from .error_handlers import register_error_handlers
+    register_error_handlers(app)
     #start scheduler
     from .tasks import expire
     scheduler.start()

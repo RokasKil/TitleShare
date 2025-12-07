@@ -1,6 +1,5 @@
 from TitleShare import create_app
-from TitleShare.scheduler import scheduler
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True, host="0.0.0.0")

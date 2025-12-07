@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}TitleShare{% endblock %}
+{% block head %}<script src="{{ url_for('static', filename='share.js') }}"></script>{% endblock %}
+{% block content %}
+    <script>
+        setTimeout(() => {
+            //window.location.replace({{ dalamudUrl | tojson }});
+        }, 1000);        
+    </script>
+    <h2>
+        Importing <span class="emp">{{ preset.name }}</span>
+        {% if preset.author %} by <span class="emp">{{ preset.author }}</span>{% endif %}
+    </h2>
+    <p>If you are not prompted to import automatically, use the buttons below!</p>
+    <div class="status-message" id="status-message"></div>
+    <button id="copy-button" type="button" onclick="copyPresetToClipboard('{{ preset.code }}')">Copy to clipboard</button>
+    <a href="/share/file/{{ preset.code | urlencode }}">Download preset</a>
+    <a href={{ dalamudUrl | tojson }}>Retry import</a>
+{% endblock %}
