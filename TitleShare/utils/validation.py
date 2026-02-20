@@ -32,7 +32,7 @@ preset_schema = {
     "type": "object",
     "additionalProperties": False,
     "properties": {
-        "Version": {"type": "integer", "enum": [5]},
+        "Version": {"type": "integer", "enum": [6]},
         "Name": {"type": "string", "maxLength": 256},
         "Author": {"type": "string", "maxLength": 256},
         "CameraFollowMode": {"type": "integer", "enum": [0, 1, 2]},
@@ -41,7 +41,7 @@ preset_schema = {
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "Version": {"type": "integer"},
+                "Version": {"type": "integer", "enum": [6]},
                 "LocationType": {"type": "integer", "enum": [0, 1]},
                 "TitleScreenLogo": {"type": "integer", "enum": [0, 1, 2, 3, 4, 5, 6, 7, 8]},
                 "TerritoryPath": {"type": "string", "maxLength": 1024},
@@ -96,9 +96,17 @@ preset_schema = {
                 },
                 "Festivals": {
                     "type": "array",
-                    "items": {"type": "integer"},
-                    "minItems": 4,
-                    "maxItems": 4
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "Id": { "type": "integer" },
+                            "Phase": { "type": "integer" },
+                        },
+                        "required": ["Id", "Phase"]
+                    },
+                    "minItems": 8,
+                    "maxItems": 8
                 },
                 "SaveLayout": {"type": "boolean"},
                 "UseVfx": {"type": "boolean"},
