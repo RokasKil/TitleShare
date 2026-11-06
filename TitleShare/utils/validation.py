@@ -137,7 +137,43 @@ preset_schema = {
                             "Id": { "type": "integer" },
                             "Stain": { "type": "integer" },
                             "Position": vector3_schema,
-                            "Rotation": { "type": "number" }
+                            "Rotation": { "type": "number" },
+                            "HousingObjectData": {
+                                "type": ["null", "object"],
+                                "additionalProperties": False,
+                                "properties": {
+                                    #Value1 is 8 ushorts and Value2-4 are 8 bytes encoded as Base64 
+                                    "Value1": {
+                                        "type": "array", 
+                                        "items": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 65535
+                                        },  
+                                        "minItems": 8,
+                                        "maxItems": 8
+                                    },
+                                    "Value2": { 
+                                        "type": "string", 
+                                        "minLength": 12,
+                                        "maxLength": 12,
+                                        "pattern": "^[A-Za-z0-9+/]{11}=$"
+                                    },
+                                    "Value3": {
+                                        "type": "string", 
+                                        "minLength": 12,
+                                        "maxLength": 12,
+                                        "pattern": "^[A-Za-z0-9+/]{11}=$"
+                                    },
+                                    "Value4": {
+                                        "type": "string", 
+                                        "minLength": 12,
+                                        "maxLength": 12,
+                                        "pattern": "^[A-Za-z0-9+/]{11}=$"
+                                    },
+                                },
+                                "required": ["Value1", "Value2", "Value3", "Value4"]
+                            }
                         },
                         "required": ["Id", "Stain", "Position", "Rotation"]
                     }
